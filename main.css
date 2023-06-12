@@ -24,7 +24,10 @@ body {
     background-color: rgb(243, 246, 249);
     border-radius: 10px;
 }
-
+.todo_field {
+    display: flex;
+    gap: 10px;
+}
 
 #textAdd {
     width: 320px;
@@ -38,7 +41,8 @@ body {
 }
 
 .todo_add {
-    padding: 10px 20px;
+    display: block;
+    padding: 5px 20px;
     color: #3c3e3f;
     cursor: pointer;
     background-color: #8cdafcbb;
@@ -46,12 +50,27 @@ body {
     border-radius: 10px;
     transition: all ease-in-out .3s;
 }
-.todo_add:hover, .todo_add:focus {
+.todo_add:hover {
     background-color: #6cccf5db;
     outline: none;
 }
 .todo_add:active {
     background-color: #61c7f3ec;
+}
+.todo_add svg, .todo_item-edit svg, .todo_item-delete svg {
+    pointer-events: none;
+    max-width: 35px;
+    max-height: 25px;
+}
+.todo_add svg circle {
+    fill: #7DD2F0;
+    transition: all ease-in-out .3s;
+}
+.todo_add:hover svg circle {
+    fill: #6cccf5db !important;
+}
+.todo_add:active svg circle {
+    fill: #61c7f3ec !important;
 }
 
 .todo-content {
@@ -76,7 +95,7 @@ body {
     opacity: 1;
 }
 .todo-text {
-    padding: 0 10px 10px 10px;
+    padding: 0 10px 0 10px;
     flex: 1 1 70%;
     word-break: break-all;
 }
@@ -90,38 +109,63 @@ body {
 }
 .checkbox + .checkbox-custom {
     position: absolute;
+    cursor: pointer;
     top: 25%;
     left: 0;
-    width: 15px;
-    height: 15px;
+    width: 23px;
+    height: 23px;
     border: 1px solid #bdbebf;
     border-radius: 4px;
 }
-.checkbox + .checkbox-custom::before {
+.checkbox + .checkbox-custom svg {
     position: absolute;
     content: '';
     inset: 0;
-    background: url('checkbox.svg') center no-repeat;
-    width: 15px;
-    height: 15px;
+    width: 23px;
+    height: 23px;
     opacity: 0;
     transition: opacity ease-in .3s;
 }
-.checkbox:checked + .checkbox-custom::before {
+.checkbox:checked + .checkbox-custom svg {
     opacity: 1;
 }
-
+/* .checkbox-custom svg path {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    transition: stroke-dashoffset 2s ease-in-out;
+}
+.checkbox-custom.active svg path {
+    stroke-dashoffset: 0 !important;
+} */
+.todo_btns {
+    display: flex;
+    gap: 5px;
+    margin-left: 10px;
+}
+.todo_item:hover .todo_item-edit, .todo_item:hover .todo_item-delete {
+    opacity: 1;
+}
 .todo_item-edit {
-    padding: 10px 5px;
-    background-color: #7d7574;
+    display: block;
+    cursor: pointer;
+    padding: 7px 5px 4px 5px;
+    background-color: #b0a8a7;
     border: 1px solid #bdbebf;
     border-radius: 5px;
+    opacity: 0;
     transition: all ease-in-out .3s;
+}
+.todo_item-edit:hover {
+    background-color: #9c9695;
+}
+.todo_item-edit:active {
+    background-color: #847f7e;
 }
 
 .todo_item-delete {
+    display: block;
     opacity: 0;
-    padding: 10px 5px;
+    padding: 7px 5px 4px 5px;
     background-color: #f25b4d;
     border: 1px solid #bdbebf;
     border-radius: 5px;
@@ -131,7 +175,6 @@ body {
     cursor: pointer;
     color: #3c3e3f;
     background-color: #e24f41;
-    opacity: 1;
     outline: none;
 }
 .todo_item-delete:active {
