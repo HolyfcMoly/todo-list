@@ -1,10 +1,12 @@
 * {
     padding: 0;
     margin: 0;
+    letter-spacing: 0.5px;
 }
 
 body {
     background: linear-gradient(135deg, #b3dced 0%,#29b8e5 50%,#bce0ee 100%);
+    
 }
 
 .container {
@@ -39,39 +41,34 @@ body {
 #textAdd:focus {
     box-shadow: 0px 2px 5px #bdbebf;
 }
-
+/* addBtn */
 .todo_add {
-    display: block;
+    display: flex;
     padding: 5px 20px;
     color: #3c3e3f;
     cursor: pointer;
+    align-items: center;
     background-color: #8cdafcbb;
     border: 1px solid #bdbebf;
     border-radius: 10px;
-    transition: all ease-in-out .3s;
+    transition: background-color ease-in-out .3s, transform .1s ease-in-out;
 }
 .todo_add:hover {
     background-color: #6cccf5db;
     outline: none;
 }
 .todo_add:active {
+    transform: scale(0.96);
     background-color: #61c7f3ec;
 }
+
 .todo_add svg, .todo_item-edit svg, .todo_item-delete svg {
     pointer-events: none;
     max-width: 35px;
     max-height: 25px;
 }
-.todo_add svg circle {
-    fill: #7DD2F0;
-    transition: all ease-in-out .3s;
-}
-.todo_add:hover svg circle {
-    fill: #6cccf5db !important;
-}
-.todo_add:active svg circle {
-    fill: #61c7f3ec !important;
-}
+/* // */
+
 
 .todo-content {
     margin-top: 25px;
@@ -80,6 +77,7 @@ body {
     list-style: none;
     flex: 1 1 100%;
 }
+/* li */
 .todo_item {
     position: relative;
     display: flex;
@@ -87,21 +85,34 @@ body {
     align-items: center;
     margin-right: 15px;
     margin-bottom: 20px;
-    padding-left: 20px;
-    max-width: 390px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 35px;
+    max-width: 430px;
     border-bottom: 1px solid #bdbebf5e;
 }
 .todo_item:hover > .todo_item-delete {
     opacity: 1;
 }
+.label {
+    margin-bottom: 25px;
+}
+/* text */
 .todo-text {
-    padding: 0 10px 0 10px;
+    padding: 5px 10px 5px 10px;
     flex: 1 1 70%;
+    border-radius: 5px;    
     word-break: break-all;
 }
-.done {
-    text-decoration: line-through;
+.todo-text:focus {
+    outline: 1px solid #2a752a;
 }
+.done {
+    background-color: #bdf6bd6a;
+    transition: background-color 0.5s ease-in-out;
+}
+/* // */
+
 /* checkbox */
 .checkbox {
     margin: 0;
@@ -110,12 +121,12 @@ body {
 .checkbox + .checkbox-custom {
     position: absolute;
     cursor: pointer;
-    top: 25%;
     left: 0;
-    width: 23px;
-    height: 23px;
+    width: 25px;
+    height: 25px;
     border: 1px solid #bdbebf;
     border-radius: 4px;
+    transition: background-color .5s ease-in-out, transform .1s ease-in-out;
 }
 .checkbox + .checkbox-custom svg {
     position: absolute;
@@ -123,20 +134,29 @@ body {
     inset: 0;
     width: 23px;
     height: 23px;
-    opacity: 0;
-    transition: opacity ease-in .3s;
 }
-.checkbox:checked + .checkbox-custom svg {
-    opacity: 1;
+.checkbox:checked + .checkbox-custom {
+    transform: scale(0.96);
+    background-color: #aaf6aa;
 }
-/* .checkbox-custom svg path {
-    stroke-dasharray: 1000;
-    stroke-dashoffset: 1000;
-    transition: stroke-dashoffset 2s ease-in-out;
+.checkbox_check {
+    fill: none;
+    stroke: #2a772a;
+    filter: drop-shadow(2px 2px 5px #218221);
+    stroke-width: 4;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    transition: all 0.5s cubic-bezier(0.42, 0, 0.58, 1);
 }
-.checkbox-custom.active svg path {
-    stroke-dashoffset: 0 !important;
-} */
+.checkbox_check-checked {
+stroke-dashoffset: 0;
+}
+.todo_item-done {
+    border-bottom: 1px solid #b6ebb6;
+    transition: all .5s cubic-bezier(0.42, 0, 0.58, 1);
+}
+/* // */
+
 .todo_btns {
     display: flex;
     gap: 5px;
@@ -145,6 +165,7 @@ body {
 .todo_item:hover .todo_item-edit, .todo_item:hover .todo_item-delete {
     opacity: 1;
 }
+/* edit */
 .todo_item-edit {
     display: block;
     cursor: pointer;
@@ -153,15 +174,18 @@ body {
     border: 1px solid #bdbebf;
     border-radius: 5px;
     opacity: 0;
-    transition: all ease-in-out .3s;
+    transition: background-color ease-in-out .3s, transform .1s ease-in-out;
 }
 .todo_item-edit:hover {
     background-color: #9c9695;
 }
 .todo_item-edit:active {
+    transform: scale(0.96);
     background-color: #847f7e;
 }
+/* // */
 
+/* delete */
 .todo_item-delete {
     display: block;
     opacity: 0;
@@ -169,17 +193,20 @@ body {
     background-color: #f25b4d;
     border: 1px solid #bdbebf;
     border-radius: 5px;
-    transition: all ease-in-out .3s;
+    transition: background-color ease-in-out .3s, transform .1s ease-in-out;
 }
 .todo_item-delete:hover, .todo_item-delete:focus {
     cursor: pointer;
-    color: #3c3e3f;
     background-color: #e24f41;
     outline: none;
 }
 .todo_item-delete:active {
+    transform: scale(0.96);
     background-color: #dc3324;
 }
+/* // */
+
+/* clear */
 .todo_clear {
     padding: 10px 20px;
     color: #3c3e3f;
@@ -187,11 +214,12 @@ body {
     background-color: #4ec2f4bb;
     border: 1px solid #bdbebf;
     border-radius: 10px;
-    transition: all ease-in-out .3s;
+    transition: background-color ease-in-out .3s, transform .1s ease-in-out;
 }
 .todo_clear:hover {
     background-color: #50c5f8ec;
 }
 .todo_clear:active {
+    transform: scale(0.96);
     background-color: #49b3e0ec;
 }

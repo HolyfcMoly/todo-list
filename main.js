@@ -53,21 +53,9 @@ window.addEventListener("DOMContentLoaded", () => {
             <label class="label">
                 <input type="checkbox" name="check" class="checkbox" ${checked}>
                 <span class="checkbox-custom">
-                <svg width="20px" height="20px" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" fill="#000000">
-                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                <g id="SVGRepo_iconCarrier">
-                  <title>check</title>
-                  <g id="Layer_2" data-name="Layer 2">
-                    <g id="invisible_box" data-name="invisible box">
-                      <rect width="48" height="48" fill="none"></rect>
-                    </g>
-                    <g id="icons_Q2" data-name="icons Q2">
-                      <path d="M14.1,37.9,6.1,30a2.1,2.1,0,0,1-.2-2.7,1.9,1.9,0,0,1,3-.2l6.6,6.6L39.1,10.1a2,2,0,0,1,2.8,2.8l-25,25A1.9,1.9,0,0,1,14.1,37.9Z"></path>
-                    </g>
-                  </g>
-                </g>
-              </svg>
+                <svg width="70px" height="70px" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" fill="#000000">
+                <path id="check" class="checkbox_check" d="M6,25 L20,40 L44,15"></path>
+                </svg>
                 </span>
             </label>
             <p class="todo-text ${done}" spellcheck="false" contenteditable="false">${task.text}</p>
@@ -91,10 +79,18 @@ window.addEventListener("DOMContentLoaded", () => {
 
             const checkBox = newTask.querySelector(".checkbox");
             if (task.done) {
+                newTask.classList.add('todo_item-done');
                 newTask.querySelector(".todo-text").classList.add("done");
+                newTask
+                    .querySelector(".checkbox_check")
+                    .classList.add("checkbox_check-checked");
                 checkBox.checked = true;
             } else {
+                newTask.classList.remove('todo_item-done');
                 newTask.querySelector(".todo-text").classList.remove("done");
+                newTask
+                    .querySelector(".checkbox_check")
+                    .classList.remove("checkbox_check-checked");
                 checkBox.checked = false;
             }
         });
@@ -112,10 +108,6 @@ window.addEventListener("DOMContentLoaded", () => {
                 const tasks = checkbox.closest(".todo_item");
                 const isEdit = tasks.getAttribute("contenteditable") === "true";
 
-                const checkboxCustom = checkbox.nextElementSibling;
-                const path = document.querySelector(
-                    ".checkbox-custom svg path"
-                );
                 if (!isEdit) {
                     const allTasks = getTask();
                     const taskIndex = allTasks.findIndex(
@@ -124,13 +116,15 @@ window.addEventListener("DOMContentLoaded", () => {
                     allTasks[taskIndex].done = checkbox.checked;
                     localStorage.setItem("tasks", JSON.stringify(allTasks));
                     const todoText = tasks.querySelector(".todo-text");
-
+                    const checkIcon = tasks.querySelector("#check");
                     if (checkbox.checked) {
+                        tasks.classList.add('todo_item-done')
                         todoText.classList.add("done");
-                        checkboxCustom.classList.add("active");
+                        checkIcon.classList.add("checkbox_check-checked");
                     } else {
+                        tasks.classList.remove('todo_item-done')
                         todoText.classList.remove("done");
-                        checkboxCustom.classList.remove("active");
+                        checkIcon.classList.remove("checkbox_check-checked");
                     }
                 } else {
                     e.preventDefault();
@@ -206,41 +200,29 @@ window.addEventListener("DOMContentLoaded", () => {
             if (inputText !== "") {
                 saveTasks({ id: taskId, text: inputText, done: false });
                 newTask.innerHTML = `
-                                    <label class="label">
-                                        <input type="checkbox" name="check" class="checkbox">
-                                        <span class="checkbox-custom">
-                                        <svg width="20px" height="20px" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" fill="#000000">
-                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                                        <g id="SVGRepo_iconCarrier">
-                                          <title>check</title>
-                                          <g id="Layer_2" data-name="Layer 2">
-                                            <g id="invisible_box" data-name="invisible box">
-                                              <rect width="48" height="48" fill="none"></rect>
-                                            </g>
-                                            <g id="icons_Q2" data-name="icons Q2">
-                                              <path d="M14.1,37.9,6.1,30a2.1,2.1,0,0,1-.2-2.7,1.9,1.9,0,0,1,3-.2l6.6,6.6L39.1,10.1a2,2,0,0,1,2.8,2.8l-25,25A1.9,1.9,0,0,1,14.1,37.9Z"></path>
-                                            </g>
-                                          </g>
-                                        </g>
-                                      </svg>
-                                        </span>
-                                    </label>
-                                    <p class="todo-text" spellcheck="false">${inputText}</p>
-                                    <div class="todo_btns"> 
-                                        <button class="todo_item-edit">
-                                            <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M11 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22H15C20 22 22 20 22 15V13" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                                            <path d="M16.04 3.02001L8.16 10.9C7.86 11.2 7.56 11.79 7.5 12.22L7.07 15.23C6.91 16.32 7.68 17.08 8.77 16.93L11.78 16.5C12.2 16.44 12.79 16.14 13.1 15.84L20.98 7.96001C22.34 6.60001 22.98 5.02001 20.98 3.02001C18.98 1.02001 17.4 1.66001 16.04 3.02001Z" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                                            <path d="M14.91 4.1499C15.58 6.5399 17.45 8.4099 19.85 9.0899" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                        </button>
-                                        <button class="todo_item-delete">
-                                        <svg width="80px" height="80px" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path fill="#000000" d="M160 256H96a32 32 0 0 1 0-64h256V95.936a32 32 0 0 1 32-32h256a32 32 0 0 1 32 32V192h256a32 32 0 1 1 0 64h-64v672a32 32 0 0 1-32 32H192a32 32 0 0 1-32-32V256zm448-64v-64H416v64h192zM224 896h576V256H224v640zm192-128a32 32 0 0 1-32-32V416a32 32 0 0 1 64 0v320a32 32 0 0 1-32 32zm192 0a32 32 0 0 1-32-32V416a32 32 0 0 1 64 0v320a32 32 0 0 1-32 32z"/>
-                                        </svg>
-                                        </button>
-                                    </div>
-                                `;
+                    <label class="label">
+                        <input type="checkbox" name="check" class="checkbox">
+                        <span class="checkbox-custom">
+                        <svg width="70px" height="70px" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" fill="#000000">
+                        <path id="check" class="checkbox_check" d="M6,25 L20,40 L44,15"></path>
+                        </svg>
+                        </span>
+                    </label>
+                    <p class="todo-text" spellcheck="false">${inputText}</p>
+                    <div class="todo_btns"> 
+                        <button class="todo_item-edit">
+                            <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M11 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22H15C20 22 22 20 22 15V13" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M16.04 3.02001L8.16 10.9C7.86 11.2 7.56 11.79 7.5 12.22L7.07 15.23C6.91 16.32 7.68 17.08 8.77 16.93L11.78 16.5C12.2 16.44 12.79 16.14 13.1 15.84L20.98 7.96001C22.34 6.60001 22.98 5.02001 20.98 3.02001C18.98 1.02001 17.4 1.66001 16.04 3.02001Z" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M14.91 4.1499C15.58 6.5399 17.45 8.4099 19.85 9.0899" stroke="#292D32" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                        <button class="todo_item-delete">
+                        <svg width="80px" height="80px" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path fill="#000000" d="M160 256H96a32 32 0 0 1 0-64h256V95.936a32 32 0 0 1 32-32h256a32 32 0 0 1 32 32V192h256a32 32 0 1 1 0 64h-64v672a32 32 0 0 1-32 32H192a32 32 0 0 1-32-32V256zm448-64v-64H416v64h192zM224 896h576V256H224v640zm192-128a32 32 0 0 1-32-32V416a32 32 0 0 1 64 0v320a32 32 0 0 1-32 32zm192 0a32 32 0 0 1-32-32V416a32 32 0 0 1 64 0v320a32 32 0 0 1-32 32z"/>
+                        </svg>
+                        </button>
+                    </div>
+                `;
                 todoInput.value = "";
                 todoContent.appendChild(newTask);
                 newTask.addEventListener("click", deleteTask);
