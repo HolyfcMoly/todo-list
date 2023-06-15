@@ -229,12 +229,13 @@ stroke-dashoffset: 0;
 }
 
 .footer_list li {
+    cursor: pointer;
     font-size: 18px;
     color: #8f8c8c;
 }
 
 .active-tab {
-    border-bottom: 1px solid #b9b7b7;
+    box-shadow: 0 2px 0 #b9b7b7;
 }
 
 /* clear */
