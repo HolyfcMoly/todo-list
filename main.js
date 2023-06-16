@@ -3,9 +3,11 @@ window.addEventListener("DOMContentLoaded", () => {
     const todoInput = todo.querySelector("#textAdd");
     const addBtn = todo.querySelector(".todo_add");
     const todoContent = todo.querySelector(".todo-content");
-    const clearBtn = todo.querySelector(".todo_clear");
+    const clearAll = todo.querySelector(".todo_clear");
+    const clearCompleted = todo.querySelector('.todo_clear-complited')
     const footer = document.querySelector('.footer');
     const counter = footer.querySelector('.counter');
+    const tabItems = document.querySelectorAll('.footer_list li');
 
     function getTask() {
         const tasks = localStorage.getItem("tasks");
@@ -26,9 +28,20 @@ window.addEventListener("DOMContentLoaded", () => {
         updateTask()
     }
 
+    function clearAllDoneTasks() {
+        let tasks = getTask();
+        const doneTask = tasks.filter(task => task.done);
+        if(doneTask.length > 0) {
+            const completedTasks = document.querySelectorAll('.todo_item input[type="checkbox"]:checked');
+            completedTasks.forEach(task => {task.parentNode.parentNode.remove()});
+            localStorage.setItem("tasks", JSON.stringify(tasks.filter(task => !task.done)));
+            updateTask();
+        }
+    }
+
     function clearAllTasks() {
         localStorage.removeItem("tasks");
-        todoContent.innerHTML = "";
+        todoContent.innerHTML = '';
         counter.innerHTML = '0 tasks left';
     }
 
@@ -49,6 +62,9 @@ window.addEventListener("DOMContentLoaded", () => {
     function updateTask() {
         const tasks = getTask();
         const remainingTasks = tasks.filter((task) => !task.done).length;
+        const doneTasks = tasks.filter(task => task.done).length;
+        
+        clearCompleted.innerHTML = `Clear completed [${doneTasks}]`
         counter.innerHTML = `${remainingTasks} tasks left`;
         tabs();
     }
@@ -269,10 +285,11 @@ window.addEventListener("DOMContentLoaded", () => {
             });
         });
     }
-
-    const tabItems = document.querySelectorAll('.footer_list li'); tabItems.forEach(item => item.addEventListener('click', tabs));
+    
+    tabItems.forEach(item => item.addEventListener('click', tabs));
     checkCreatedTask();
     addBtn.addEventListener("click", addTask);
     todoInput.addEventListener("keydown", addTask);
-    clearBtn.addEventListener("click", clearAllTasks);
+    clearCompleted.addEventListener("click", clearAllDoneTasks);
+    clearAll.addEventListener('click', clearAllTasks);
 });
