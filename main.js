@@ -4,10 +4,24 @@ window.addEventListener("DOMContentLoaded", () => {
     const addBtn = todo.querySelector(".todo_add");
     const todoContent = todo.querySelector(".todo-content");
     const clearAll = todo.querySelector(".todo_clear");
-    const clearCompleted = todo.querySelector('.todo_clear-complited')
-    const footer = document.querySelector('.footer');
-    const counter = footer.querySelector('.counter');
-    const tabItems = document.querySelectorAll('.footer_list li');
+    const clearCompleted = todo.querySelector(".todo_clear-complited");
+    const footer = document.querySelector(".footer");
+    const counter = footer.querySelector(".counter");
+    const tabItems = document.querySelectorAll(".footer_list li");
+
+    function showBtns() {
+        const tasks = getTask();
+console.log(tasks)
+        tasks.forEach((item) => {
+            item.addEventListener("click", (e) => {
+                console.log(e.target)
+                const editBtn = item.querySelector(".todo_item-edit");
+                editBtn.classList.toggle("todo_item-edit-active");
+            });
+        });
+    }
+    
+    todoContent.addEventListener('click', showBtns);
 
     function getTask() {
         const tasks = localStorage.getItem("tasks");
@@ -25,24 +39,31 @@ window.addEventListener("DOMContentLoaded", () => {
         const taskIndex = allTasks.findIndex((task) => task.id === taskId);
         allTasks.splice(taskIndex, 1);
         localStorage.setItem("tasks", JSON.stringify(allTasks));
-        updateTask()
+        updateTask();
     }
 
     function clearAllDoneTasks() {
         let tasks = getTask();
-        const doneTask = tasks.filter(task => task.done);
-        if(doneTask.length > 0) {
-            const completedTasks = document.querySelectorAll('.todo_item input[type="checkbox"]:checked');
-            completedTasks.forEach(task => {task.parentNode.parentNode.remove()});
-            localStorage.setItem("tasks", JSON.stringify(tasks.filter(task => !task.done)));
+        const doneTask = tasks.filter((task) => task.done);
+        if (doneTask.length > 0) {
+            const completedTasks = document.querySelectorAll(
+                '.todo_item input[type="checkbox"]:checked'
+            );
+            completedTasks.forEach((task) => {
+                task.parentNode.parentNode.remove();
+            });
+            localStorage.setItem(
+                "tasks",
+                JSON.stringify(tasks.filter((task) => !task.done))
+            );
             updateTask();
         }
     }
 
     function clearAllTasks() {
         localStorage.removeItem("tasks");
-        todoContent.innerHTML = '';
-        counter.innerHTML = '0 tasks left';
+        todoContent.innerHTML = "";
+        counter.innerHTML = "0 tasks left";
     }
 
     function deleteTask(e) {
@@ -62,51 +83,51 @@ window.addEventListener("DOMContentLoaded", () => {
     function updateTask() {
         const tasks = getTask();
         const remainingTasks = tasks.filter((task) => !task.done).length;
-        const doneTasks = tasks.filter(task => task.done).length;
-        
-        clearCompleted.innerHTML = `Clear completed [${doneTasks}]`
+        const doneTasks = tasks.filter((task) => task.done).length;
+
+        clearCompleted.innerHTML = `Clear completed [${doneTasks}]`;
         counter.innerHTML = `${remainingTasks} tasks left`;
         tabs();
     }
 
     function tabs() {
         const tasks = getTask();
-        const tabItems = footer.querySelectorAll('.footer_list li');
+        const tabItems = footer.querySelectorAll(".footer_list li");
 
-        tabItems.forEach(tab => {
+        tabItems.forEach((tab) => {
             try {
-                tab.addEventListener('click', () => {
-                    const activeClass = 'active-tab';
-                    tabItems.forEach(tab => {
-                        tab.classList.remove(activeClass)
+                tab.addEventListener("click", () => {
+                    const activeClass = "active-tab";
+                    tabItems.forEach((tab) => {
+                        tab.classList.remove(activeClass);
                     });
                     tab.classList.add(activeClass);
-                    const target = tab.getAttribute('data-target');
-                    tasks.forEach(task => {
-                        const taskId = document.getElementById(task.id)
+                    const target = tab.getAttribute("data-target");
+                    tasks.forEach((task) => {
+                        const taskId = document.getElementById(task.id);
 
                         if (!taskId) {
-                            return
+                            return;
                         }
-                        if(target === 'all') {
-                            taskId.style.display = 'flex';
-                        }  else if (target === 'completed') {
-                            if(task.done) {
-                                taskId.style.display = 'flex'
+                        if (target === "all") {
+                            taskId.style.display = "flex";
+                        } else if (target === "completed") {
+                            if (task.done) {
+                                taskId.style.display = "flex";
                             } else {
-                                taskId.style.display = 'none'
+                                taskId.style.display = "none";
                             }
                         } else {
-                            if(task.done) {
-                                taskId.style.display = 'none'
+                            if (task.done) {
+                                taskId.style.display = "none";
                             } else {
-                                taskId.style.display = 'flex'
+                                taskId.style.display = "flex";
                             }
                         }
-                    })
-                })
-            } catch(e) {}
-        })
+                    });
+                });
+            } catch (e) {}
+        });
     }
 
     function createTask(task) {
@@ -216,7 +237,7 @@ window.addEventListener("DOMContentLoaded", () => {
                         tasks.classList.add("todo_item-done");
                         todoText.classList.add("done");
                         checkIcon.classList.add("checkbox_check-checked");
-                        updateTask()
+                        updateTask();
                     } else {
                         tasks.classList.remove("todo_item-done");
                         todoText.classList.remove("done");
@@ -285,11 +306,11 @@ window.addEventListener("DOMContentLoaded", () => {
             });
         });
     }
-    
-    tabItems.forEach(item => item.addEventListener('click', tabs));
+
+    tabItems.forEach((item) => item.addEventListener("click", tabs));
     checkCreatedTask();
     addBtn.addEventListener("click", addTask);
     todoInput.addEventListener("keydown", addTask);
     clearCompleted.addEventListener("click", clearAllDoneTasks);
-    clearAll.addEventListener('click', clearAllTasks);
+    clearAll.addEventListener("click", clearAllTasks);
 });
