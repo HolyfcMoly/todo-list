@@ -9,20 +9,6 @@ window.addEventListener("DOMContentLoaded", () => {
     const counter = footer.querySelector(".counter");
     const tabItems = document.querySelectorAll(".footer_list li");
 
-    function showBtns() {
-        const tasks = getTask();
-console.log(tasks)
-        tasks.forEach((item) => {
-            item.addEventListener("click", (e) => {
-                console.log(e.target)
-                const editBtn = item.querySelector(".todo_item-edit");
-                editBtn.classList.toggle("todo_item-edit-active");
-            });
-        });
-    }
-    
-    todoContent.addEventListener('click', showBtns);
-
     function getTask() {
         const tasks = localStorage.getItem("tasks");
         return tasks ? JSON.parse(tasks) : [];
@@ -252,6 +238,60 @@ console.log(tasks)
         });
     }
 
+    function showBtns(e) {
+        const target = e.target;
+        const parentEl = target.parentNode;
+        const tasks = getTask();
+        const taskId = parentEl.getAttribute("id");
+        const taskIndex = tasks.findIndex((task) => task.id === taskId);
+        const editBtns = document.querySelectorAll(".todo_item-edit");
+        const deleteBtns = document.querySelectorAll(".todo_item-delete");
+
+        if (parentEl.classList.contains("todo_item")) {
+            const editBtn = parentEl.querySelector(".todo_item-edit");
+            const delBtn = parentEl.querySelector(".todo_item-delete");
+
+            const activeEdit = editBtn.classList.contains(
+                "todo_item--btns-active"
+            );
+            const activeDel = delBtn.classList.contains(
+                "todo_item--btns-active"
+            );
+
+            if (!activeEdit && !activeDel) {
+                editBtns.forEach((btn) =>
+                    btn.classList.remove("todo_item--btns-active")
+                );
+                deleteBtns.forEach((btn) =>
+                    btn.classList.remove("todo_item--btns-active")
+                );
+            }
+            tasks[taskIndex] = editBtn.classList.toggle(
+                "todo_item--btns-active"
+            );
+            tasks[taskIndex] = delBtn.classList.toggle(
+                "todo_item--btns-active"
+            );
+        } else if (!todoContent.contains(target)) {
+            editBtns.forEach((btn) =>
+                btn.classList.remove("todo_item--btns-active")
+            );
+            deleteBtns.forEach((btn) =>
+                btn.classList.remove("todo_item--btns-active")
+            );
+        }
+        document.body.addEventListener("click", (e) => {
+            const btns = document.querySelectorAll(
+                ".todo_item-edit, .todo_item-delete"
+            );
+            if (!e.target.closest(".todo_item")) {
+                btns.forEach((btn) =>
+                    btn.classList.remove("todo_item--btns-active")
+                );
+            }
+        });
+    }
+
     function editBtn() {
         const btnEdit = todoContent.querySelectorAll(".todo_item-edit");
         const todoText = todoContent.querySelectorAll(".todo-text");
@@ -307,6 +347,7 @@ console.log(tasks)
         });
     }
 
+    todoContent.addEventListener("click", showBtns);
     tabItems.forEach((item) => item.addEventListener("click", tabs));
     checkCreatedTask();
     addBtn.addEventListener("click", addTask);
