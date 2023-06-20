@@ -1,4 +1,5 @@
 window.addEventListener("DOMContentLoaded", () => {
+    // получаем элементы со страницы
     const todo = document.querySelector(".todo");
     const todoInput = todo.querySelector("#textAdd");
     const addBtn = todo.querySelector(".todo_add");
@@ -8,18 +9,18 @@ window.addEventListener("DOMContentLoaded", () => {
     const footer = document.querySelector(".footer");
     const counter = footer.querySelector(".counter");
     const tabItems = document.querySelectorAll(".footer_list li");
-
+    // получаем задачи из localStorage
     function getTask() {
         const tasks = localStorage.getItem("tasks");
         return tasks ? JSON.parse(tasks) : [];
     }
-
+    // сохраняем задачи в localStorage
     function saveTasks(taskObj) {
         let allTasks = getTask();
         allTasks.push(taskObj);
         localStorage.setItem("tasks", JSON.stringify(allTasks));
     }
-
+    // удаляем задачу из localStorage
     function deleteTaskFromLS(taskId) {
         let allTasks = getTask();
         const taskIndex = allTasks.findIndex((task) => task.id === taskId);
@@ -27,7 +28,7 @@ window.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem("tasks", JSON.stringify(allTasks));
         updateTask();
     }
-
+    // очищаем все выполненные задачи
     function clearAllDoneTasks() {
         let tasks = getTask();
         const doneTask = tasks.filter((task) => task.done);
@@ -45,13 +46,13 @@ window.addEventListener("DOMContentLoaded", () => {
             updateTask();
         }
     }
-
+    // очищаем все задачи
     function clearAllTasks() {
         localStorage.removeItem("tasks");
         todoContent.innerHTML = "";
         counter.innerHTML = "0 tasks left";
     }
-
+    // удаляем задачу
     function deleteTask(e) {
         const target = e.target;
         const parentEl = target.parentNode;
@@ -65,7 +66,7 @@ window.addEventListener("DOMContentLoaded", () => {
             parentEl.parentNode.remove();
         }
     }
-
+    // обновление информации о задачи
     function updateTask() {
         const tasks = getTask();
         const remainingTasks = tasks.filter((task) => !task.done).length;
@@ -75,7 +76,7 @@ window.addEventListener("DOMContentLoaded", () => {
         counter.innerHTML = `${remainingTasks} tasks left`;
         tabs();
     }
-
+    // переключение между вкладками
     function tabs() {
         const tasks = getTask();
         const tabItems = footer.querySelectorAll(".footer_list li");
@@ -115,7 +116,7 @@ window.addEventListener("DOMContentLoaded", () => {
             } catch (e) {}
         });
     }
-
+    // создаем задачу
     function createTask(task) {
         const newTask = document.createElement("li");
         newTask.classList.add("todo_item");
@@ -150,7 +151,7 @@ window.addEventListener("DOMContentLoaded", () => {
         newTask.addEventListener("click", deleteTask);
         return newTask;
     }
-
+    // функция проверяет уже созданные задачи при загрузке страницы
     function checkCreatedTask() {
         const tasks = getTask();
         tasks.forEach((task) => {
@@ -180,7 +181,7 @@ window.addEventListener("DOMContentLoaded", () => {
         editBtn();
         checkCheckbox();
     }
-
+    // добавляем новую задачу
     function addTask(e) {
         if (e.keyCode === 13 || e.type === "click") {
             const inputText = todoInput.value.trim();
@@ -193,14 +194,15 @@ window.addEventListener("DOMContentLoaded", () => {
                     done: false,
                 });
                 todoInput.value = "";
-                todoContent.appendChild(newTask);
+                const firstTask = todoContent.firstChild;
+                todoContent.insertBefore(newTask, firstTask);
                 updateTask();
                 checkCheckbox();
                 editBtn();
             }
         }
     }
-
+    // функция проверки состояния checkbox
     function checkCheckbox() {
         const checkbox = todoContent.querySelectorAll(
             '.todo_item input[type="checkbox"]'
@@ -237,7 +239,7 @@ window.addEventListener("DOMContentLoaded", () => {
             });
         });
     }
-
+    // функция показа кнопок задачи
     function showBtns(e) {
         const target = e.target;
         const parentEl = target.parentNode;
@@ -291,7 +293,7 @@ window.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
-
+    // функция редактирования задачи
     function editBtn() {
         const btnEdit = todoContent.querySelectorAll(".todo_item-edit");
         const todoText = todoContent.querySelectorAll(".todo-text");
@@ -299,6 +301,7 @@ window.addEventListener("DOMContentLoaded", () => {
         btnEdit.forEach((btn, index) => {
             let editMode = false;
             const taskId = btn.closest(".todo_item").getAttribute("id");
+
             btn.addEventListener("click", (e) => {
                 e.stopPropagation();
                 if (editMode) {
@@ -308,6 +311,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 todoText[index].setAttribute("contenteditable", true);
                 todoText[index].focus();
             });
+
             todoText[index].addEventListener("keydown", (e) => {
                 if (e.keyCode === 13) {
                     e.preventDefault();
@@ -331,6 +335,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     todoText[index].blur();
                 }
             });
+            
             todoText[index].addEventListener("blur", () => {
                 editMode = false;
                 const inputText = todoText[index].innerText.trim();
@@ -346,9 +351,10 @@ window.addEventListener("DOMContentLoaded", () => {
             });
         });
     }
-
+    // назначаем обработчики событий для вызова функций
     todoContent.addEventListener("click", showBtns);
     tabItems.forEach((item) => item.addEventListener("click", tabs));
+    // вызываем каждый раз при загрузке страницы
     checkCreatedTask();
     addBtn.addEventListener("click", addTask);
     todoInput.addEventListener("keydown", addTask);
