@@ -361,3 +361,12 @@ window.addEventListener("DOMContentLoaded", () => {
     clearCompleted.addEventListener("click", clearAllDoneTasks);
     clearAll.addEventListener("click", clearAllTasks);
 });
+
+
+
+/* 
+если не нравиться реализация с кнопкой редактирования ее можно удалить, но оставить возможность редактирования
+в функции createTask() удалить <button class="todo_item-edit">,
+в функции editBtn() удалить const btnEdit..., на строке 301 заменить btnEdit на todoText,
+в функции showBtns(e) удалить все что относится к editBtn
+*/
