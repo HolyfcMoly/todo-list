@@ -309,7 +309,7 @@ body {
     }
 }
 
-@media (max-width: 577px) {
+@media (max-width: 577px), (max-height: 420px) {
     .container {
         display: block;
         padding-top: 3px;
